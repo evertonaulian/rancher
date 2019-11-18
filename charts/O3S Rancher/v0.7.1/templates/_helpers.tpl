@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "webhook.name" -}}
+{{- define "v0.7.1.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "webhook.fullname" -}}
+{{- define "v0.7.1.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,22 +27,19 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "webhook.chart" -}}
+{{- define "v0.7.1.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "webhook.selfSignedIssuer" -}}
-{{ printf "%s-selfsign" (include "webhook.fullname" .) }}
-{{- end -}}
-
-{{- define "webhook.rootCAIssuer" -}}
-{{ printf "%s-ca" (include "webhook.fullname" .) }}
-{{- end -}}
-
-{{- define "webhook.rootCACertificate" -}}
-{{ printf "%s-ca" (include "webhook.fullname" .) }}
-{{- end -}}
-
-{{- define "webhook.servingCertificate" -}}
-{{ printf "%s-webhook-tls" (include "webhook.fullname" .) }}
+{{/*
+Common labels
+*/}}
+{{- define "v0.7.1.labels" -}}
+app.kubernetes.io/name: {{ include "v0.7.1.name" . }}
+helm.sh/chart: {{ include "v0.7.1.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
